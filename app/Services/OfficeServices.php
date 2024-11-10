@@ -2,17 +2,18 @@
 
 namespace App\Services;
 
-use App\Models\Office;
+use App\Repositories\OfficeRepository;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
-final class OfficeServices
+final class OfficeServices extends ApiService
 {
-    public function __construct(private Office $model) {}
+    public function __construct(private OfficeRepository $officeRepo) {}
 
-    public function createOffice(array $officeData): array
+    public function createOffice(array $officeData): JsonResponse
     {
-        $office = $this->model->newInstance($officeData);
-        $office->save();
+        $result = $this->officeRepo->create($officeData);
 
-        return $office->toArray();
+        return $this->jsonResponse($result, Response::HTTP_CREATED);
     }
 }

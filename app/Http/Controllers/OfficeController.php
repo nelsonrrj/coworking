@@ -6,7 +6,6 @@ use App\Http\Requests\CreateOfficeRequest;
 use App\Services\OfficeServices;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class OfficeController extends Controller
 {
@@ -25,10 +24,7 @@ class OfficeController extends Controller
      */
     public function store(CreateOfficeRequest $request): JsonResponse
     {
-        return $this->jsonResponse(
-            $this->service->createOffice($request->validated()),
-            Response::HTTP_CREATED
-        );
+        return $this->service->createOffice($request->validated());
     }
 
     /**
