@@ -1,0 +1,49 @@
+name: coworking
+
+services:
+  server:
+    container_name: coworking_server
+    build:
+      context: .
+      dockerfile: ./dockerfiles/nginx/nginx.dockerfile
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - php
+      - mysql
+  php:
+    container_name: coworking_php
+    build:
+      context: .
+      dockerfile: ./dockerfiles/php/php.dockerfile
+      args:
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+    user: ${UID:-1000}:${GID:-1000}
+    volumes:
+      - ./:/var/www/html
+  mysql:
+    container_name: coworking_mysql
+    image: mysql:9.1.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-root}
+      - MYSQL_DATABASE=${DB_DATABASE:-presea}
+      - MYSQL_USER=${DB_USERNAME:-root}
+      - MYSQL_PASSWORD=${DB_PASSWORD:-root}
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql910:/var/lib/mysql
+  artisan:
+    container_name: coworking_artisan
+    build:
+      context: .
+      dockerfile: ./dockerfiles/php/php.dockerfile
+    volumes:
+      - ./:/var/www/html
+    entrypoint: [ "php", "/var/www/html/artisan" ]
+
+volumes:
+  mysql910:
