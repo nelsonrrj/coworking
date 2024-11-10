@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('offices')->group(function () {
     Route::get('/', [OfficeController::class, 'index'])->name('office.index');
-    Route::post('/', [OfficeController::class, 'store'])->name('office.index');
+    Route::post('/', [OfficeController::class, 'store'])->name('office.store');
 });
 
 require __DIR__ . '/auth.php';
