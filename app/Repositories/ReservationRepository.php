@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Reservation;
+use Illuminate\Support\Facades\Date;
 
 final class ReservationRepository
 {
@@ -14,5 +15,19 @@ final class ReservationRepository
         $reservation->save();
 
         return $reservation->toArray();
+    }
+
+    public static function isAvailableDate(string $startDate, int $officeId): bool
+    {
+        $endDate = Date::createFromDate($startDate)->addMinutes(
+            config('reservation.duration_in_minutes')
+        );
+
+        $result = Reservation::where('office_id', '=', $officeId)
+            ->whereBetween('start_at', [$startDate, $endDate])
+            ->orWhereBetween('end_at', [$startDate, $endDate])
+            ->get();
+
+        return $result->isEmpty();
     }
 }

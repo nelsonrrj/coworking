@@ -12,6 +12,8 @@ use Tests\TestCase;
 
 class ReservationTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_customer_can_access_to_get_reservations_api(): void
     {
         $user = User::factory()->notAdmin()->create();
@@ -43,6 +45,8 @@ class ReservationTest extends TestCase
 
     public function test_customer_send_complete_data_to_create_reservation_api(): void
     {
+        $this->refreshDatabase();
+
         $user = User::factory()->notAdmin()->create();
         $office = Office::factory()->create();
 
@@ -67,11 +71,13 @@ class ReservationTest extends TestCase
 
     public function test_create_reservation_with_duration_configured(): void
     {
+        $this->refreshDatabase();
+
         $user = User::factory()->notAdmin()->create();
         $office = Office::factory()->create();
 
         $startAt = now();
-        $endAt = $startAt->addMinutes(config('reservation.duration_in_minutes'));
+        $endAt = now()->addMinutes(config('reservation.duration_in_minutes'));
 
         $reservationData = [
             'office_id' => $office['id'],
@@ -83,6 +89,7 @@ class ReservationTest extends TestCase
         $response = $this->post('/reservations', $reservationData);
 
         $response->assertStatus(Response::HTTP_CREATED);
+
         $this->assertDatabaseHas('reservations', [
             'user_id' => $user['id'],
             'office_id' => $office['id'],
@@ -91,5 +98,26 @@ class ReservationTest extends TestCase
         ]);
     }
 
-    //TODO: Check if it has available date
+    public function test_error_trying_to_create_a_reservation_in_a_occupied_spot(): void
+    {
+        $user = User::factory()->notAdmin()->create();
+        $office = Office::factory()->create();
+        $startAt = now();
+
+        // old reservation
+        Reservation::factory()->create([
+            'start_at' => now()->addMinutes(15),
+        ]);
+
+        $newReservationData = [
+            'office_id' => $office['id'],
+            'start_at' => $startAt,
+        ];
+
+        $this->actingAs($user);
+
+        $response = $this->post('/reservations', $newReservationData);
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
 }

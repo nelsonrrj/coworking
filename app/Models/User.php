@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\DataValues\Role;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -51,5 +52,11 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role_id === Role::ADMIN;
+    }
+
+    /*** RELATIONSHIPS ***/
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class, 'user_id', 'id');
     }
 }

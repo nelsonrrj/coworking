@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\AvailableReservationDateRule;
 
 class StoreReservationRequest extends ApiRequest
 {
@@ -15,7 +15,7 @@ class StoreReservationRequest extends ApiRequest
     {
         return [
             'office_id' => ['required', 'exists:offices,id'],
-            'start_at' => ['required', 'date']
+            'start_at' => ['required', 'date', new AvailableReservationDateRule]
         ];
     }
 }
