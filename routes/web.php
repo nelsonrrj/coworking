@@ -25,12 +25,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth'])->prefix('offices')->group(function () {
+Route::middleware(['auth', 'isAdmin'])->prefix('offices')->group(function () {
     Route::get('/', [OfficeController::class, 'index'])
+        ->withoutMiddleware('isAdmin')
         ->name('office.index');
-    Route::post('/', [OfficeController::class, 'store'])
-        ->middleware('isAdmin')
-        ->name('office.store');
+
+    Route::post('/', [OfficeController::class, 'store'])->name('office.store');
+
+    Route::put('/{officeId}', [OfficeController::class, 'update'])
+        ->name('office.update');
 });
 
 require __DIR__ . '/auth.php';

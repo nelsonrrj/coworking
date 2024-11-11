@@ -82,4 +82,36 @@ class OfficeTest extends TestCase
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
+
+    public function test_admin_can_update_an_office(): void
+    {
+        $oldOfficeData = [
+            'name' => 'oldName',
+            'description' => 'oldDescription'
+        ];
+
+        $office = Office::factory()->create($oldOfficeData);
+
+        $newOfficeData = [
+            'name' => 'NewName',
+            'description' => 'NewDescription'
+        ];
+
+        $response = $this->put("/offices/{$office['id']}", $newOfficeData);
+
+        $response->assertStatus(Response::HTTP_OK);
+        $this->assertDatabaseHas('offices', ['id' => $office['id'], ...$newOfficeData]);
+    }
+
+    public function test_trying_to_update_an_inexistent_office(): void
+    {
+        $newOfficeData = [
+            'name' => 'NewName',
+            'description' => 'NewDescription'
+        ];
+
+        $response = $this->put("/offices/9999", $newOfficeData);
+
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
 }

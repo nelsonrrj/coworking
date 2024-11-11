@@ -27,4 +27,10 @@ final class OfficeRepository
 
         return ['data' => $result, 'total' => $total];
     }
+
+    public function update(int $officeId, array $officeData): bool
+    {
+        $office = $this->model->newQuery()->findOrFail($officeId);
+        return $office->fill($officeData)->save();
+    }
 }

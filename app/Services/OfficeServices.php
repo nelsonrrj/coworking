@@ -23,4 +23,10 @@ final class OfficeServices extends ApiService
 
         return $this->jsonResponse($page);
     }
+
+    public function updateOffice(int $officeId, array $officeData): JsonResponse
+    {
+        $this->officeRepo->update($officeId, $officeData);
+        return $this->jsonResponse([]);
+    }
 }
