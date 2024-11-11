@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\OfficeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReservationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -37,6 +38,10 @@ Route::middleware(['auth', 'isAdmin'])->prefix('offices')->group(function () {
 
     Route::delete('/{officeId}', [OfficeController::class, 'destroy'])
         ->name('office.update');
+});
+
+Route::middleware(['auth'])->prefix('reservations')->group(function () {
+    Route::get('/', [ReservationController::class, 'index']);
 });
 
 require __DIR__ . '/auth.php';
