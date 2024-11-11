@@ -30,4 +30,17 @@ final class ReservationRepository
 
         return $result->isEmpty();
     }
+
+    public function getReservationByCostumer(int $userId, int $page, int $perPage): array
+    {
+        $result = $this->model->newQuery()
+            ->where('user_id', '=', $userId)
+            ->offset(($page - 1) * $perPage)
+            ->limit($perPage)
+            ->get();
+
+        $total = $this->model->newQuery()->count();
+
+        return ['data' => $result, 'total' => $total];
+    }
 }

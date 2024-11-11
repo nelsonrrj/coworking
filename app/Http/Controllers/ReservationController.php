@@ -14,9 +14,13 @@ class ReservationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return [];
+        return $this->service->getCostumerReservations(
+            $request->user()->id,
+            $request->get('page', 0),
+            $request->get('perPage', 15)
+        );
     }
 
     /**

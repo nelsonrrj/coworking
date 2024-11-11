@@ -25,4 +25,11 @@ final class ReservationService extends ApiService
 
         return $this->jsonResponse($result, Response::HTTP_CREATED);
     }
+
+    public function getCostumerReservations(int $userId, int $page, int $perPage): JsonResponse
+    {
+        $result = $this->reservationRepo->getReservationByCostumer($userId, $page, $perPage);
+
+        return $this->jsonResponse($result);
+    }
 }

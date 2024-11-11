@@ -14,18 +14,22 @@ class ReservationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_customer_can_access_to_get_reservations_api(): void
+    public function test_customer_get_all_his_reservations(): void
     {
+        $userReservations = 5;
         $user = User::factory()->notAdmin()->create();
+        Reservation::factory()
+            ->count($userReservations)
+            ->create(['user_id' => $user['id']]);
 
         $this->actingAs($user);
 
         $response = $this->get('/reservations');
 
-        $response->assertStatus(Response::HTTP_OK);
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonCount($userReservations, 'data.data');
     }
-
-    //TODO: list reservations
 
     public function test_customer_send_incomplete_data_to_create_reservation_api(): void
     {
