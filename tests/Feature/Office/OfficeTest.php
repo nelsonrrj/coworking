@@ -114,4 +114,22 @@ class OfficeTest extends TestCase
 
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
+
+    public function test_delete_an_existing_office(): void
+    {
+        $office = Office::factory()->create();
+
+        $response = $this->delete("/offices/{$office['id']}");
+
+        $response->assertStatus(Response::HTTP_OK);
+
+        $this->assertDatabaseMissing('offices', ['id' => $office['id']]);
+    }
+
+    public function test_trying_to_delete_an_existing_office(): void
+    {
+        $response = $this->delete("/offices/9999");
+
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
 }

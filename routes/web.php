@@ -34,6 +34,9 @@ Route::middleware(['auth', 'isAdmin'])->prefix('offices')->group(function () {
 
     Route::put('/{officeId}', [OfficeController::class, 'update'])
         ->name('office.update');
+
+    Route::delete('/{officeId}', [OfficeController::class, 'destroy'])
+        ->name('office.update');
 });
 
 require __DIR__ . '/auth.php';

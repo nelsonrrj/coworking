@@ -33,4 +33,9 @@ final class OfficeRepository
         $office = $this->model->newQuery()->findOrFail($officeId);
         return $office->fill($officeData)->save();
     }
+
+    public function delete(int $officeId): bool
+    {
+        return $this->model->newQuery()->findOrFail($officeId)->delete();
+    }
 }

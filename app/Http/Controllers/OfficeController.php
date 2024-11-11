@@ -49,8 +49,8 @@ class OfficeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $officeId): JsonResponse
     {
-        //
+        return $this->service->deleteOffice($officeId);
     }
 }

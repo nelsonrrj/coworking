@@ -27,6 +27,12 @@ final class OfficeServices extends ApiService
     public function updateOffice(int $officeId, array $officeData): JsonResponse
     {
         $this->officeRepo->update($officeId, $officeData);
-        return $this->jsonResponse([]);
+        return $this->jsonResponse();
+    }
+
+    public function deleteOffice(int $officeId): JsonResponse
+    {
+        $this->officeRepo->delete($officeId);
+        return $this->jsonResponse();
     }
 }
