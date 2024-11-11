@@ -14,6 +14,9 @@
         <testsuite name="Office">
             <directory>tests/Feature/Office</directory>
         </testsuite>
+        <testsuite name="Reservation">
+            <directory>tests/Feature/Reservation</directory>
+        </testsuite>
     </testsuites>
     <source>
         <include>

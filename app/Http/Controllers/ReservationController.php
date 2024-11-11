@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreReservationRequest;
+use App\Services\ReservationService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
+    public function __construct(private readonly ReservationService $service) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -17,9 +22,9 @@ class ReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreReservationRequest $request): JsonResponse
     {
-        //
+        return $this->service->create($request->user()->id, $request->validated());
     }
 
     /**
