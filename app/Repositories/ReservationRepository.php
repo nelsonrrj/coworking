@@ -43,4 +43,10 @@ final class ReservationRepository
 
         return ['data' => $result, 'total' => $total];
     }
+
+    public function update(int $reservationId, array $reservationData): bool
+    {
+        $reservation = $this->model->newQuery()->findOrFail($reservationId);
+        return $reservation->fill($reservationData)->save();
+    }
 }

@@ -43,6 +43,9 @@ Route::middleware(['auth', 'isAdmin'])->prefix('offices')->group(function () {
 Route::middleware(['auth'])->prefix('reservations')->group(function () {
     Route::get('/', [ReservationController::class, 'index'])->name('reservation.index');
     Route::post('/', [ReservationController::class, 'store'])->name('reservation.store');
+    Route::put('/{reservationId}', [ReservationController::class, 'update'])
+        ->middleware('isAdmin')
+        ->name('reservation.store');
 });
 
 require __DIR__ . '/auth.php';

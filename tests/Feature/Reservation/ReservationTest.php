@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\DataValues\ReservationStatus;
 use App\Models\Office;
 use App\Models\User;
 use App\Models\Reservation;
@@ -123,5 +124,35 @@ class ReservationTest extends TestCase
         $response = $this->post('/reservations', $newReservationData);
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    public function test_admin_user_approved_a_reservation()
+    {
+        $admin = User::factory()->admin()->create();
+        $reservation = Reservation::factory()->create();
+
+        $this->actingAs($admin);
+        $response = $this->put("/reservations/{$reservation['id']}", ['reservation_status' => ReservationStatus::APPROVED]);
+
+        $response->assertStatus(Response::HTTP_OK);
+
+        $this->assertDatabaseHas(
+            'reservations',
+            [
+                'id' => $reservation['id'],
+                'reservation_status' => ReservationStatus::APPROVED
+            ]
+        );
+    }
+
+    public function test_costumer_cannot_approved_a_reservation()
+    {
+        $user = User::factory()->notAdmin()->create();
+        $reservation = Reservation::factory()->create();
+
+        $this->actingAs($user);
+        $response = $this->put("/reservations/{$reservation['id']}", ['reservation_status' => ReservationStatus::APPROVED]);
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 }

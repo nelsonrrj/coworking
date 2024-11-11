@@ -32,4 +32,11 @@ final class ReservationService extends ApiService
 
         return $this->jsonResponse($result);
     }
+
+    public function updateStatus(int $reservationId, int $reservationStatus): JsonResponse
+    {
+        $this->reservationRepo->update($reservationId, ['reservation_status' => $reservationStatus]);
+
+        return $this->jsonResponse();
+    }
 }
