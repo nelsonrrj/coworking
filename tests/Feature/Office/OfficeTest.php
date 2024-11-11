@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Office;
 
+use App\Models\Office;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -25,6 +26,17 @@ class OfficeTest extends TestCase
         $response = $this->get('/offices');
 
         $response->assertStatus(Response::HTTP_OK);
+    }
+
+    public function test_list_all_offices_created(): void
+    {
+        $quantity = 3;
+
+        Office::factory()->count($quantity)->create();
+
+        $response = $this->get('/offices');
+
+        $response->assertJsonCount($quantity, 'data.data');
     }
 
     public function test_validate_office_information_to_save(): void

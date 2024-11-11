@@ -15,4 +15,16 @@ final class OfficeRepository
 
         return $office->toArray();
     }
+
+    public function paginate(int $page = 1, int $perPage = 10): array
+    {
+        $result = $this->model->newQuery()
+            ->offset(($page - 1) * $perPage)
+            ->limit($perPage)
+            ->get();
+
+        $total = $this->model->newQuery()->count();
+
+        return ['data' => $result, 'total' => $total];
+    }
 }

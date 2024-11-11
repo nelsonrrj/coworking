@@ -16,4 +16,11 @@ final class OfficeServices extends ApiService
 
         return $this->jsonResponse($result, Response::HTTP_CREATED);
     }
+
+    public function getOfficesList(int $page, int $perPage): JsonResponse
+    {
+        $page = $this->officeRepo->paginate($page, $perPage);
+
+        return $this->jsonResponse($page);
+    }
 }

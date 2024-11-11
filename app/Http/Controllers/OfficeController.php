@@ -14,9 +14,12 @@ class OfficeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        return [];
+        return $this->service->getOfficesList(
+            $request->get('page', 0),
+            $request->get('perPage', 20)
+        );
     }
 
     /**

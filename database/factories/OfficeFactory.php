@@ -17,7 +17,8 @@ class OfficeFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->streetName(),
+            'description' => fake()->sentence(6),
         ];
     }
 }

@@ -9,6 +9,6 @@ class ApiService
 {
     public function jsonResponse(array $data, int $httpCode = Response::HTTP_OK): JsonResponse
     {
-        return new JsonResponse($data, $httpCode);
+        return new JsonResponse(['data' => $data], $httpCode);
     }
 }
