@@ -45,6 +45,15 @@ services:
     volumes:
       - ./:/var/www/html
     entrypoint: [ "php", "/var/www/html/artisan" ]
+  composer:
+    image: composer:2.7.7
+    working_dir: /var/www/html
+    entrypoint: ["composer", "--ignore-platform-reqs"]
+    user: ${UID:-1000}:${GID:-1000}
+    environment:
+      - COMPOSER_ALLOW_SUPERUSER=0
+    volumes:
+      - ./:/var/www/html
 
 volumes:
   mysql910:
