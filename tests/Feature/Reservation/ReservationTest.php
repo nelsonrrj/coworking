@@ -32,6 +32,20 @@ class ReservationTest extends TestCase
             ->assertJsonCount($userReservations, 'data.data');
     }
 
+    public function test_admin_can_filter_list_of_reservations_by_office_id()
+    {
+        $this->refreshTestDatabase();
+
+        $admin = User::factory()->admin()->create();
+        $office = Office::factory()->create();
+        $list = Reservation::factory()->count(20)->create();
+        $reservation = Reservation::factory()->create(['office_id' => $office['id']]);
+
+        $this->actingAs($admin);
+        $response = $this->get("/admin/reservations?office={$office['id']}");
+        $response->assertJsonCount(1, 'data.data');
+    }
+
     public function test_customer_send_incomplete_data_to_create_reservation_api(): void
     {
         $user = User::factory()->notAdmin()->create();

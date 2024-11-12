@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DataValues\ReservationFilterDto;
 use App\Http\Requests\StoreReservationRequest;
 use App\Http\Requests\UpdateReservationRequest;
 use App\Services\ReservationService;
@@ -19,8 +20,17 @@ class ReservationController extends Controller
     {
         return $this->service->getCostumerReservations(
             $request->user()->id,
-            $request->get('page', 0),
+            $request->get('page', 1),
             $request->get('perPage', 15)
+        );
+    }
+
+    public function listByAdmin(Request $request)
+    {
+        return $this->service->getAdminReservations(
+            page: $request->get('page', 1),
+            perPage: $request->get('perPage', 15),
+            officeId: $request->get('office')
         );
     }
 
@@ -33,14 +43,6 @@ class ReservationController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateReservationRequest $request, string $reservationId): JsonResponse
@@ -49,13 +51,5 @@ class ReservationController extends Controller
             $reservationId,
             $request->get('reservation_status'),
         );
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

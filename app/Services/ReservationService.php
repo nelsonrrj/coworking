@@ -39,4 +39,10 @@ final class ReservationService extends ApiService
 
         return $this->jsonResponse();
     }
+
+    public function getAdminReservations(int $page, int $perPage, int|null $officeId = null): JsonResponse
+    {
+        $result = $this->reservationRepo->getListFilter($page, $perPage, $officeId);
+        return $this->jsonResponse($result);
+    }
 }

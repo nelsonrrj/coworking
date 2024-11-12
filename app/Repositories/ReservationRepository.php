@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Reservation;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Date;
 
 final class ReservationRepository
@@ -48,5 +49,25 @@ final class ReservationRepository
     {
         $reservation = $this->model->newQuery()->findOrFail($reservationId);
         return $reservation->fill($reservationData)->save();
+    }
+
+    public function getListFilter(int $page, int $perPage, int|null $officeId = null): array
+    {
+        $result = $this->model->newQuery()
+            ->when(!is_null($officeId), function (Builder $q) use ($officeId) {
+                $q->where('office_id', '=', $officeId);
+            })
+            ->offset(($page - 1) * $perPage)
+            ->limit($perPage)
+            ->get();
+
+        $total = $this->model
+            ->newQuery()
+            ->when(!is_null($officeId), function (Builder $q) use ($officeId) {
+                $q->where('office_id', '=', $officeId);
+            })
+            ->count();
+
+        return ['data' => $result, 'total' => $total];
     }
 }
